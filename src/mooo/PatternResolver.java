@@ -59,23 +59,4 @@ public class PatternResolver {
       }
     }
   }
-
-
-  private interface FSVisitor {
-    void acceptFile(@NotNull File file);
-
-    @NotNull
-    VisitorOutcome acceptDirectory(@NotNull File path);
-  }
-
-  private static enum VisitorOutcome {
-    CONTINUE,
-    SKIP
-  }
-
-
-
-
-
-
 }
