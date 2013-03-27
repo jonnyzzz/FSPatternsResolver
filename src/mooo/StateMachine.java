@@ -1,5 +1,7 @@
 package mooo;
 
+import mooo.wildcard.ExactWildcard;
+import mooo.wildcard.Wildcard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

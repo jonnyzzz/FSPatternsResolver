@@ -1,4 +1,4 @@
-package mooo;
+package mooo.wildcard;
 
 import org.jetbrains.annotations.NotNull;
 

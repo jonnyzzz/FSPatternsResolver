@@ -1,5 +1,6 @@
 package mooo;
 
+import mooo.wildcard.Wildcard;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
