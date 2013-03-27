@@ -25,7 +25,7 @@ public class PatternResolver {
     }
 
     final Set<File> result = new LinkedHashSet<File>();
-    visitFS(root, result, new StateMachine(state));
+    visitFS(root, result, new SimpleStateMachine(state));
     return result;
   }
 
