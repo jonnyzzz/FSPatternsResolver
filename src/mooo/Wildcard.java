@@ -21,9 +21,5 @@ public abstract class Wildcard {
     myNext.add(w);
   }
 
-  protected void onAdded(Wildcard prev) {
-
-  }
-
   public abstract boolean matches(@NotNull String name);
 }
