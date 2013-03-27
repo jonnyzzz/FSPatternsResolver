@@ -3,18 +3,31 @@ package mooo;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Eugene Petrenko (eugene.petrenko@gmail.com)
  * Date: 26.03.13 23:08
  */
 public class PatternResolver {
+  private final Wildcards myFactory = new Wildcards();
 
+  @NotNull
+  public Set<File> resolveWildcards(@NotNull File root, @NotNull Collection<String> includes) {
+    final List<StateMachine> state = new ArrayList<StateMachine>();
+    for (String include : includes) {
+      state.add(new StateMachine(myFactory.parseWildcard(include)));
+    }
 
-  private void visitFS(@NotNull File root, @NotNull FSVisitor visitor) {
-    File[] allFiles = root.listFiles();
+    final Set<File> result = new LinkedHashSet<File>();
+    visitFS(root, result, state);
+    return result;
+  }
+
+  private void visitFS(@NotNull File root, @NotNull Set<File> result, @NotNull Collection<StateMachine> state) {
+    if (state.isEmpty()) return;
+
+    final File[] allFiles = root.listFiles();
     if (allFiles == null) return;
 
     final Set<File> dirs = new HashSet<File>();
@@ -22,14 +35,28 @@ public class PatternResolver {
       if (path.isDirectory()) {
         dirs.add(path);
 
-        final VisitorOutcome outcome = visitor.acceptDirectory(path);
+        final String name = path.getName();
+        final List<StateMachine> nextState = new ArrayList<StateMachine>(state.size());
+        for (StateMachine m : state) {
+          StateMachine next = m.advance(name);
+          if (next != null) {
+            nextState.add(next);
+          }
+        }
 
+        visitFS(path, result, nextState);
       }
     }
 
     for (File path : allFiles) {
       if (dirs.contains(path)) continue;
-      visitor.acceptFile(path);
+
+      for (StateMachine m : state) {
+        if (m.matchFiles(path.getName())) {
+          result.add(path);
+          break;
+        }
+      }
     }
   }
 
@@ -37,11 +64,13 @@ public class PatternResolver {
   private interface FSVisitor {
     void acceptFile(@NotNull File file);
 
+    @NotNull
     VisitorOutcome acceptDirectory(@NotNull File path);
   }
 
-  private class VisitorOutcome {
-
+  private static enum VisitorOutcome {
+    CONTINUE,
+    SKIP
   }
 
 

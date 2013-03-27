@@ -64,7 +64,7 @@ public class Wildcards {
               .replace("*", ".*");
 
       //TODO: include case-check here
-      return new PatternWildcard(Pattern.compile(regex));
+      return new PatternWildcard(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
     }
 
     return new ExactWildcard(el);

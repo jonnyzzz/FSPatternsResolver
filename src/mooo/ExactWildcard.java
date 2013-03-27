@@ -15,7 +15,7 @@ public class ExactWildcard extends Wildcard {
 
   @Override
   public boolean matches(@NotNull String name) {
-    return name.equals(myName);
+    return name.equalsIgnoreCase(myName);
   }
 
   @Override
