@@ -4,9 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Eugene Petrenko (eugene.petrenko@gmail.com)
@@ -14,46 +12,55 @@ import java.util.List;
  */
 
 public class WildcardsTest {
-
-  @Test
-  public void should_parse_basic_wildcards() {
-    assertParse("", "");
-    assertParse("**", "/**");
-    assertParse("**/*", "/**/*");
-    assertParse("a/v", "/a/v");
-    assertParse("a/v/", "/a/v");
-    assertParse("a/v?/", "/a/v.?");
-  }
-
   @Test
   public void should_generate_right_links_for_w() {
-    assertLinks("a/**/b", "0 -> 1 2", "1 -> 2", "2 ->");
+    assertLinks("a/**/b",
+
+            "a -> **",
+            "a -> b",
+            "** -> **",
+            "** -> b",
+            "b -> !"
+    );
   }
 
+  @Test
+  public void should_remove_double_w() {
+    assertLinks("a/**/**/**/b",
 
-  private void assertParse(@NotNull String pt, @NotNull String gold) {
-    Wildcard[] wd = new Wildcards().parseWildcard(pt);
-
-    StringBuilder sb = new StringBuilder();
-    for (Wildcard w : wd) {
-      sb.append("/").append(w);
-    }
-    Assert.assertEquals(gold, sb.toString());
+            "a -> **",
+            "a -> b",
+            "** -> **",
+            "** -> b",
+            "b -> !"
+    );
   }
+
 
   private void assertLinks(@NotNull String pt, @NotNull String... gold) {
-    Wildcard[] wd = new Wildcards().parseWildcard(pt);
-    List<Wildcard> list = new ArrayList<Wildcard>(Arrays.asList(wd));
+    Collection<Wildcard> wd = new Wildcards().parseWildcard(pt);
 
-    int i = 0;
-    for (Wildcard w : list) {
-      StringBuilder sb = new StringBuilder();
-      sb.append(list.indexOf(w));
-      sb.append(" -> ");
+    Set<Wildcard> visited = new HashSet<Wildcard>();
+    Queue<Wildcard> queue = new ArrayDeque<Wildcard>(wd);
+
+    List<String> graph = new ArrayList<String>();
+    while(!queue.isEmpty()) {
+      final Wildcard w = queue.remove();
+      if (!visited.add(w)) continue;
+
       for (Wildcard n : w.getNext()) {
-        sb.append(list.indexOf(n)).append(" ");
+        queue.add(n);
+        graph.add( w + " -> " + n);
       }
-      Assert.assertEquals(gold[i++], sb.toString().trim());
+      if (w.getNext().isEmpty()) {
+        graph.add( w + " -> !");
+      }
     }
+
+    for (String s : graph) {
+      System.out.println(s);
+    }
+
+    Assert.assertEquals(new ArrayList<String>(Arrays.asList(gold)), graph);
   }
 }

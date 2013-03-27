@@ -3,6 +3,7 @@ package mooo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -11,19 +12,16 @@ import java.util.regex.Pattern;
  * Date: 27.03.13 22:29
  */
 public class Wildcards {
-  @NotNull
-  public StateMachine parse(@NotNull String pt) {
-    return new StateMachine(parseWildcard(pt)[0]);
-  }
-
+  public static final String FAKE_WILDCARD_ROOT = "FAKE";
 
   @NotNull
-  public Wildcard[] parseWildcard(@NotNull String s) {
-    final String[] items = s
+  public Collection<Wildcard> parseWildcard(@NotNull String s) {
+    final String[] items = (FAKE_WILDCARD_ROOT + "/" + s)
             //remove extra stars
             .replaceAll("\\*[\\*]+", "**")
                     //normalize slashes
             .replaceAll("[\\\\/]+", "/")
+            .replaceAll("\\*\\*(/\\*\\*)+", "**")
             .split("/");
 
     final List<Wildcard> result = new ArrayList<Wildcard>();
@@ -34,15 +32,23 @@ public class Wildcards {
 
     Wildcard[] wildcards = result.toArray(new Wildcard[result.size()]);
 
-    Wildcard prev = null;
+    Wildcard next = null;
+    Wildcard nextNext = null;
     for(int i = wildcards.length-1; i >= 0; i--) {
-      if (prev != null) {
-        wildcards[i].setNext(prev);
+      final Wildcard prev = wildcards[i];
+      if (next != null) {
+        prev.addNext(next);
+
+        if (next instanceof AnyWildcard && nextNext != null) {
+          prev.addNext(nextNext);
+        }
       }
-      prev = wildcards[i];
+
+      nextNext = next;
+      next = prev;
     }
 
-    return wildcards;
+    return wildcards[0].getNext();
   }
 
 

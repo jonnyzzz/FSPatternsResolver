@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 * Date: 27.03.13 22:29
 */
 public class AnyWildcard extends Wildcard {
+  public AnyWildcard() {
+    addNext(this);
+  }
+
   @Override
   public boolean matches(@NotNull String name) {
     return true;
