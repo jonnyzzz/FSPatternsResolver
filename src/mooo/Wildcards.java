@@ -12,7 +12,12 @@ import java.util.regex.Pattern;
  * Date: 27.03.13 22:29
  */
 public class Wildcards {
-  public static final String FAKE_WILDCARD_ROOT = "FAKE";
+  private static final String FAKE_WILDCARD_ROOT = "FAKE";
+  private final boolean myIsCaseSensitive;
+
+  public Wildcards(boolean isCaseSensitive) {
+    myIsCaseSensitive = isCaseSensitive;
+  }
 
   @NotNull
   public Collection<Wildcard> parseWildcard(@NotNull String s) {
@@ -64,10 +69,12 @@ public class Wildcards {
               .replace("*", ".*");
 
       //TODO: include case-check here
-      return new PatternWildcard(Pattern.compile(regex, Pattern.CASE_INSENSITIVE));
+      return new PatternWildcard(Pattern.compile(regex, myIsCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE));
     }
 
-    return new ExactWildcard(el);
+    return myIsCaseSensitive
+            ? new ExactCaseSensitiveWildcard(el)
+            : new ExactCaseInSensitiveWildcard(el);
   }
 
 }

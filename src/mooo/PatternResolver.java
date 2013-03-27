@@ -10,7 +10,11 @@ import java.util.*;
  * Date: 26.03.13 23:08
  */
 public class PatternResolver {
-  private final Wildcards myFactory = new Wildcards();
+  private final Wildcards myFactory;
+
+  public PatternResolver(boolean isCaseSensitive) {
+    myFactory = new Wildcards(isCaseSensitive);
+  }
 
   @NotNull
   public Set<File> resolveWildcards(@NotNull File root, @NotNull Collection<String> includes) {

@@ -38,7 +38,7 @@ public class WildcardsTest {
 
 
   private void assertLinks(@NotNull String pt, @NotNull String... gold) {
-    Collection<Wildcard> wd = new Wildcards().parseWildcard(pt);
+    Collection<Wildcard> wd = new Wildcards(true).parseWildcard(pt);
 
     Set<Wildcard> visited = new HashSet<Wildcard>();
     Queue<Wildcard> queue = new ArrayDeque<Wildcard>(wd);

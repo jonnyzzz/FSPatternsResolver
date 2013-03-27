@@ -14,7 +14,7 @@ public class ResolverTest {
 
   @Test
   public void testWindows() {
-    PatternResolver pr = new PatternResolver();
+    PatternResolver pr = new PatternResolver(true);
 
     Set<File> files = pr.resolveWildcards(new File("C:\\"), Arrays.asList("windows/Microsoft.NET/**/*.dll"));
     System.out.println(files);

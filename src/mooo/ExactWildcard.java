@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 * Created by Eugene Petrenko (eugene.petrenko@gmail.com)
 * Date: 27.03.13 22:28
 */
-public class ExactWildcard extends Wildcard {
+public abstract class ExactWildcard extends Wildcard {
   private final String myName;
 
   public ExactWildcard(@NotNull String name) {
@@ -20,8 +20,10 @@ public class ExactWildcard extends Wildcard {
 
   @Override
   public boolean matches(@NotNull String name) {
-    return name.equalsIgnoreCase(myName);
+    return areSameNames(name, myName);
   }
+
+  protected abstract boolean areSameNames(@NotNull String a, @NotNull String b);
 
   @Override
   public String toString() {
