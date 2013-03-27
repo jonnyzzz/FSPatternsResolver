@@ -18,6 +18,16 @@ public class StateMachine {
     myState = state;
   }
 
+  @Nullable
+  public Collection<String> follows() {
+    Collection<String> foll = new ArrayList<String>(myState.size());
+    for (Wildcard w : myState) {
+      if (!(w instanceof ExactWildcard)) return null;
+      foll.add(((ExactWildcard) w).getName());
+    }
+    return foll;
+  }
+
   public boolean matchFiles(@NotNull String fileName) {
     for (Wildcard wildcard : myState) {
       if (!wildcard.getNext().isEmpty()) continue;

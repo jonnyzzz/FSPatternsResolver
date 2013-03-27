@@ -9,8 +9,13 @@ import org.jetbrains.annotations.NotNull;
 public class ExactWildcard extends Wildcard {
   private final String myName;
 
-  ExactWildcard(@NotNull String name) {
+  public ExactWildcard(@NotNull String name) {
     myName = name;
+  }
+
+  @NotNull
+  public String getName() {
+    return myName;
   }
 
   @Override
