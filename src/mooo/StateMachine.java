@@ -12,7 +12,7 @@ import java.util.List;
  * Date: 27.03.13 23:39
  */
 public class StateMachine {
-  private Collection<Wildcard> myState;
+  private final Collection<Wildcard> myState;
 
   public StateMachine(@NotNull Collection<Wildcard> state) {
     myState = state;
@@ -38,7 +38,7 @@ public class StateMachine {
 
   @Nullable
   public StateMachine advance(@NotNull String dirName) {
-    List<Wildcard> nextState = new ArrayList<Wildcard>();
+    List<Wildcard> nextState = new ArrayList<Wildcard>(myState.size() * 2);
     for (Wildcard wildcard : myState) {
       if (wildcard.matches(dirName)) {
         nextState.addAll(wildcard.getNext());
@@ -50,6 +50,4 @@ public class StateMachine {
 
     return new StateMachine(nextState);
   }
-
-
 }
