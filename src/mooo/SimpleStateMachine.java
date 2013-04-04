@@ -47,10 +47,8 @@ public class SimpleStateMachine implements StateMachine {
         nextState.addAll(wildcard.getNext());
       }
     }
-    if (nextState.isEmpty()) {
-      return null;
-    }
-
+    if (nextState.isEmpty()) return null;
+    if (nextState.equals(myState)) return this;
     return new SimpleStateMachine(nextState);
   }
 }
