@@ -1,6 +1,7 @@
 package mooo;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,8 +34,12 @@ public class ResolverTest {
     Set<File> files = pr.resolveWildcards(
             new File("C:\\"),
             Arrays.asList("windows/Microsoft.NET/**/*.dll"),
-            Arrays.asList("**/v2.*/**/*"));
+            Arrays.asList("**/v2.*/**"));
     printFiles(files);
+
+    for (File file : files) {
+      Assert.assertFalse(file.getName(), file.getPath().contains("v2."));
+    }
   }
 
   private void printFiles(@NotNull final Set<File> files) {

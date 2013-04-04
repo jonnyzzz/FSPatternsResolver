@@ -21,5 +21,9 @@ public abstract class Wildcard {
     myNext.add(w);
   }
 
+  public boolean isLeaf() {
+    return getNext().isEmpty();
+  }
+
   public abstract boolean matches(@NotNull String name);
 }

@@ -33,7 +33,7 @@ public class SimpleStateMachine implements StateMachine {
 
   public boolean matchFiles(@NotNull String fileName) {
     for (Wildcard wildcard : myState) {
-      if (!wildcard.getNext().isEmpty()) continue;
+      if (!wildcard.isLeaf()) continue;
       if (wildcard.matches(fileName)) return true;
     }
     return false;

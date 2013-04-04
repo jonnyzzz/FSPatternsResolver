@@ -21,7 +21,7 @@ public class WildcardsTest {
             "a -> b",
             "** -> **",
             "** -> b",
-            "b -> !"
+            "b L ->"
     );
   }
 
@@ -33,7 +33,15 @@ public class WildcardsTest {
             "a -> b",
             "** -> **",
             "** -> b",
-            "b -> !"
+            "b L ->"
+    );
+  }
+
+  @Test
+  public void should_mark_trailing_start_as_leaf() {
+    assertLinks("a/**/**/**",
+            "a -> **",
+            "** L -> **"
     );
   }
 
@@ -51,10 +59,10 @@ public class WildcardsTest {
 
       for (Wildcard n : w.getNext()) {
         queue.add(n);
-        graph.add( w + " -> " + n);
+        graph.add( w +(w.isLeaf() ? " L" : "" )+ " -> " + n);
       }
       if (w.getNext().isEmpty()) {
-        graph.add( w + " -> !");
+        graph.add( w + " L ->");
       }
     }
 
