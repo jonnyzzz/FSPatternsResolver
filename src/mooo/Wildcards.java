@@ -69,7 +69,6 @@ public class Wildcards {
               .replace("?", ".?")
               .replace("*", ".*");
 
-      //TODO: include case-check here
       return new PatternWildcard(Pattern.compile(regex, myIsCaseSensitive ? 0 : Pattern.CASE_INSENSITIVE));
     }
 
