@@ -7,7 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Eugene Petrenko (eugene.petrenko@gmail.com)
@@ -40,7 +41,7 @@ public class SimpleStateMachine implements StateMachine {
 
   @Nullable
   public StateMachine advance(@NotNull String dirName) {
-    List<Wildcard> nextState = new ArrayList<Wildcard>(myState.size() * 2);
+    Set<Wildcard> nextState = new HashSet<Wildcard>(myState.size() * 2);
     for (Wildcard wildcard : myState) {
       if (wildcard.matches(dirName)) {
         nextState.addAll(wildcard.getNext());
