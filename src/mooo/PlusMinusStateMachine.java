@@ -60,6 +60,7 @@ public class PlusMinusStateMachine implements StateMachine {
     StateMachine minus = myMinusMachine.advance(dirName);
     if (plus == null) return null;
     if (minus == null) return plus;
+    if (plus == myPlusMachine && minus == myMinusMachine) return this;
 
     return new PlusMinusStateMachine(plus, minus);
   }
