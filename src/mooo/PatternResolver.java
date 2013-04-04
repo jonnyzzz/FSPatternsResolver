@@ -18,14 +18,25 @@ public class PatternResolver {
   }
 
   @NotNull
-  public Set<File> resolveWildcards(@NotNull File root, @NotNull Collection<String> includes) {
-    final List<Wildcard> state = new ArrayList<Wildcard>();
+  public Set<File> resolveWildcards(@NotNull File root,
+                                    @NotNull Collection<String> includes,
+                                    @NotNull Collection<String> excludes) {
+    final List<Wildcard> pStates = new ArrayList<Wildcard>();
     for (String include : includes) {
-      state.addAll(myFactory.parseWildcard(include));
+      pStates.addAll(myFactory.parseWildcard(include));
+    }
+    final List<Wildcard> mStates = new ArrayList<Wildcard>();
+    for (String include : excludes) {
+      mStates.addAll(myFactory.parseWildcard(include));
     }
 
     final Set<File> result = new LinkedHashSet<File>();
-    visitFS(root, result, new SimpleStateMachine(state));
+    visitFS(root,
+            result,
+            new PlusMinusStateMachine(
+                    new SimpleStateMachine(pStates),
+                    new SimpleStateMachine(mStates)
+            ));
     return result;
   }
 
